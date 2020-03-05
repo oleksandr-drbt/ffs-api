@@ -1,3 +1,21 @@
 {
-  "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-config-airbnb"]
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended",
+        "tslint-config-prettier",
+        "tslint-config-airbnb"
+    ],
+    "jsRules": {},
+    "rules": {
+        "import-name": [false],
+        "radix": false,
+        "variable-name": {
+            "options": [
+                "allow-snake-case"
+            ]
+        },
+        "object-literal-shorthand": [false],
+        "no-console": false
+    },
+    "rulesDirectory": []
 }
