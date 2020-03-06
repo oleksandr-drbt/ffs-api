@@ -5,8 +5,8 @@ import auth from '../middlewares/auth';
 
 const router = Router();
 
-router.post('/register', AuthController.register);
-router.post('/login', AuthController.login);
+router.post('/auth/register', AuthController.register);
+router.post('/auth/login', AuthController.login);
 router.get('/me', auth, AuthController.me);
 router.get('/logout', auth, AuthController.logout);
 

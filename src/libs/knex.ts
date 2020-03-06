@@ -2,10 +2,10 @@ import Knex from 'knex';
 import knexfileConfig from '../knexfile-config';
 import { Model } from 'objection';
 
-const knex = Knex(knexfileConfig.development);
+const knexConfig = Knex(knexfileConfig.development);
 
-export default {
-	init: () => {
-		Model.knex(knex);
-	}
+export const db = {
+  init: () => {
+    Model.knex(knexConfig);
+  },
 };

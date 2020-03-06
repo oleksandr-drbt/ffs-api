@@ -8,15 +8,15 @@ const positionRules = Joi.string().max(100);
 const passwordRules = Joi.string().max(255);
 
 export const createUserSchema = Joi.object().keys({
-	first_name: firstNameRules.required(),
-	last_name: lastNameRules.required(),
-	email: emailRules.required(),
-	password: passwordRules.required(),
+  first_name: firstNameRules.required(),
+  last_name: lastNameRules.required(),
+  email: emailRules.required(),
+  password: passwordRules.required(),
 });
 
 export const editUserSchema = Joi.object().keys({
-	first_name: firstNameRules.optional(),
-	last_name: lastNameRules.optional(),
-	phone: phoneRules.optional(),
-	position: positionRules.optional(),
+  first_name: firstNameRules.optional(),
+  last_name: lastNameRules.optional(),
+  phone: phoneRules.optional(),
+  position: positionRules.optional(),
 });

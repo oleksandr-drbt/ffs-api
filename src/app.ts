@@ -6,7 +6,7 @@ import logger from 'morgan';
 import passport from './libs/passport';
 import webRouter from './routes/web';
 import apiRouter from './routes/api';
-import db from './libs/knex';
+import { db } from './libs/knex';
 import { PAGE_NOT_FOUND } from './constants/errorMessages';
 
 const app: Application = express();
@@ -24,7 +24,7 @@ app.use(passport.initialize());
 app.use('/', webRouter);
 app.use('/api', apiRouter);
 app.use((req: Request, res: Response) => {
-	res.status(404).send({ message: PAGE_NOT_FOUND });
+  res.status(404).send({ message: PAGE_NOT_FOUND });
 });
 
 export default app;
