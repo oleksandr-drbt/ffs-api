@@ -18,7 +18,7 @@ class AuthController {
    * @param req
    * @param res
    */
-  public static async register(req: Request, res: Response) {
+  public static async register(req: Request, res: Response): Promise<void> {
     const userData = req.body;
     const { email } = userData;
     let user = await UserService.findByEmail(email);
@@ -40,7 +40,7 @@ class AuthController {
     const { access_token, expires_in } = await TokenService.generateAccessToken(user);
     CookieService.setAuthCookie(res, access_token, expires_in);
 
-    res.json({ user, access_token, expires_in });
+    res.json({ user, access_token });
   }
 
   /**
@@ -48,7 +48,7 @@ class AuthController {
    * @param req
    * @param res
    */
-  public static async login(req: Request, res: Response) {
+  public static async login(req: Request, res: Response): Promise<void> {
     const { email, password } = req.body;
     const user = await UserService.findByEmail(email);
 
@@ -75,11 +75,8 @@ class AuthController {
    * @param req
    * @param res
    */
-  public static async me(req: Request, res: Response) {
-    const authorizedUser = req.user;
-    // @ts-ignore
-    const { id } = authorizedUser;
-    const user = await UserService.find(id);
+  public static async me(req: Request, res: Response): Promise<void> {
+    const user = req.user;
 
     if (!user) {
       res.status(404).send({ message: USER_NOT_FOUND });
@@ -94,7 +91,7 @@ class AuthController {
    * @param req
    * @param res
    */
-  public static async logout(req: Request, res: Response) {
+  public static async logout(req: Request, res: Response): Promise<void> {
     CookieService.clearAuthCookie(res);
     res.send({ message: 'Success logout!' });
   }

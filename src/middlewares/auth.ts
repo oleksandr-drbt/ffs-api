@@ -1,7 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import config from '../config';
-import { TOKEN_EXPIRED, TOKEN_INVALID, TOKEN_NOT_PROVIDED } from '../constants/errorMessages';
+import {
+  TOKEN_EXPIRED,
+  TOKEN_INVALID,
+  TOKEN_NOT_PROVIDED,
+  USER_NOT_FOUND,
+} from '../constants/errorMessages';
+import UserService from '../services/UserService';
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   const { cookieName, secret } = config.jwt;
@@ -14,7 +20,16 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const token = authorization.replace('Bearer ', '');
-    req.user = jwt.verify(token, secret);
+    const authData = jwt.verify(token, secret);
+    // @ts-ignore
+    const user = await UserService.find(authData.id);
+
+    if (!user) {
+      res.status(404).send({ message: USER_NOT_FOUND });
+      return;
+    }
+
+    req.user = user;
     next();
   } catch (err) {
     if (err instanceof TokenExpiredError) {
