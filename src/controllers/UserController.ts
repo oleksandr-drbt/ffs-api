@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { validator } from '../libs/validator';
 import UserService from '../services/UserService';
+import PasswordService from '../services/PasswordService';
 import { editUserSchema } from '../schemas/userSchemas';
-import { USER_NOT_FOUND } from '../constants/errorMessages';
+import { changePasswordSchema } from '../schemas/passwordSchemas';
+import { USER_NOT_FOUND, PASSWORD_NOT_CORRECT } from '../constants/errorMessages';
 
 class UserController {
   /**
@@ -51,6 +53,33 @@ class UserController {
     // @ts-ignore
     user = await UserService.update(user.id, userData);
     res.send(user);
+  }
+
+  /**
+   * Change user's password
+   * @param req
+   * @param res
+   */
+  public static async changePassword(req: Request, res: Response): Promise<void> {
+    const { old_password, new_password } = req.body;
+    const errors = validator.validate(req.body, changePasswordSchema);
+
+    if (errors) {
+      res.status(400).send(errors);
+      return;
+    }
+
+    // @ts-ignore
+    const { id, password } = req.user;
+    const isValidPassword = await PasswordService.comparePasswords(old_password, password);
+
+    if (!isValidPassword) {
+      res.status(400).json({ message: PASSWORD_NOT_CORRECT });
+      return;
+    }
+
+    await UserService.changePassword(id, new_password);
+    res.send({ message: 'Password has been changed successfully.' });
   }
 
   /**

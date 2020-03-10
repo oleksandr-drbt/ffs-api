@@ -14,6 +14,7 @@ router.get('/logout', auth, AuthController.logout);
 router.get('/users', auth, UserController.list);
 router.get('/users/:id', auth, UserController.get);
 router.put('/user/edit-profile', auth, UserController.update);
+router.put('/user/change-password', auth, UserController.changePassword);
 router.delete('/user/delete-account', auth, UserController.remove);
 
 router.post('/skills', auth, SkillController.create);
