@@ -8,3 +8,5 @@ export const USER_NOT_FOUND = 'User not found.';
 export const USER_EXISTS = 'User with this email already exists.';
 export const USER_NOT_EXISTS = 'User with this email does not exists.';
 export const PASSWORD_NOT_CORRECT = 'Password is not correct.';
+
+export const SKILL_EXISTS = 'Skill already exists.';

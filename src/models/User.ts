@@ -1,4 +1,6 @@
 import BaseModel from './BaseModel';
+import { Model } from 'objection';
+import Skill from './Skill';
 
 class User extends BaseModel {
   id?: string;
@@ -26,12 +28,29 @@ class User extends BaseModel {
       position: { type: 'string', maxLength: 100 },
       avatar: { type: 'string', maxLength: 255 },
       password: { type: 'string', minLength: 1, maxLength: 255 },
+      created_at: { type: 'datetime' },
+      updated_at: { type: 'datetime' },
     },
   };
 
   $beforeUpdate() {
     this.updated_at = new Date().toISOString();
   }
+
+  static relationMappings = {
+    skills: {
+      relation: Model.ManyToManyRelation,
+      modelClass: Skill,
+      join: {
+        from: 'users.id',
+        through: {
+          from: 'users_skills.user_id',
+          to: 'users_skills.skill_id',
+        },
+        to: 'skills.id',
+      },
+    },
+  };
 }
 
 export default User;

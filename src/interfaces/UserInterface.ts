@@ -5,4 +5,5 @@ export interface UserInterface {
   phone?: string;
   position?: string;
   password: string;
+  skills: string[];
 }
