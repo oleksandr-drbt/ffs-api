@@ -1,11 +1,12 @@
 import Joi from 'joi';
+import { skillNameRules } from './skillSchemas';
 
-const firstNameRules = Joi.string().max(100);
-const lastNameRules = Joi.string().max(100);
-const emailRules = Joi.string().email().max(255);
-const phoneRules = Joi.string().max(20);
-const positionRules = Joi.string().max(100);
-const passwordRules = Joi.string().max(255);
+export const firstNameRules = Joi.string().max(100);
+export const lastNameRules = Joi.string().max(100);
+export const emailRules = Joi.string().email().max(255);
+export const phoneRules = Joi.string().max(20);
+export const positionRules = Joi.string().max(100);
+export const passwordRules = Joi.string().min(6).max(255);
 
 export const createUserSchema = Joi.object().keys({
   first_name: firstNameRules.required(),
@@ -19,4 +20,5 @@ export const editUserSchema = Joi.object().keys({
   last_name: lastNameRules.optional(),
   phone: phoneRules.optional(),
   position: positionRules.optional(),
+  skills: Joi.array().items(skillNameRules),
 });
