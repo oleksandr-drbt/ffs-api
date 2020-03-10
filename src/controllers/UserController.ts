@@ -10,7 +10,7 @@ class UserController {
    * @param req
    * @param res
    */
-  public static async list(req: Request, res: Response) {
+  public static async list(req: Request, res: Response): Promise<void> {
     const users = await UserService.findAll();
 
     res.send(users);
@@ -21,7 +21,7 @@ class UserController {
    * @param req
    * @param res
    */
-  public static async get(req: Request, res: Response) {
+  public static async get(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const user = await UserService.find(id);
 
@@ -38,17 +38,8 @@ class UserController {
    * @param req
    * @param res
    */
-  public static async update(req: Request, res: Response) {
-    const authorizedUser = req.user;
-    // @ts-ignore
-    const { id } = authorizedUser;
-    let user = await UserService.find(id);
-
-    if (!user) {
-      res.status(404).json({ error: 'User not found' });
-      return;
-    }
-
+  public static async update(req: Request, res: Response): Promise<void> {
+    let user = req.user;
     const userData = req.body;
     const errors = validator.validate(userData, editUserSchema);
 
@@ -57,7 +48,8 @@ class UserController {
       return;
     }
 
-    user = await UserService.update(id, userData);
+    // @ts-ignore
+    user = await UserService.update(user.id, userData);
     res.send(user);
   }
 
@@ -66,10 +58,9 @@ class UserController {
    * @param req
    * @param res
    */
-  public static async remove(req: Request, res: Response) {
-    const authorizedUser = req.user;
+  public static async remove(req: Request, res: Response): Promise<void> {
     // @ts-ignore
-    const { id } = authorizedUser;
+    const { id } = req.user;
     await UserService.remove(id);
 
     res.send({ message: 'User has been deleted successfully!' });
