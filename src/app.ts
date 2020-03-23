@@ -6,7 +6,7 @@ import logger from 'morgan';
 import passport from './libs/passport';
 import webRouter from './routes/web';
 import apiRouter from './routes/api';
-import { db } from './libs/knex';
+import { db } from './libs/db';
 import { PAGE_NOT_FOUND } from './constants/errorMessages';
 
 const app: Application = express();
@@ -19,6 +19,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'storage')));
 app.use(passport.initialize());
 
 app.use('/', webRouter);

@@ -2,6 +2,7 @@ import User from '../models/User';
 import Skill from '../models/Skill';
 import PasswordService from './PasswordService';
 import SkillService from './SkillService';
+import AvatarService from './AvatarService';
 import { UserInterface } from '../interfaces/UserInterface';
 import { v4 as uuid } from 'uuid';
 
@@ -15,6 +16,7 @@ class UserService {
       ...userData,
       id: userId,
       password: hashedPassword,
+      avatar: AvatarService.generateAvatarUrl('default.png'),
     });
 
     return this.find(userId);
@@ -37,7 +39,7 @@ class UserService {
   }
 
   public static async update(id: string, data: UserInterface) {
-    const { skills } = data;
+    const { skills = [] } = data;
     const user = await User.query().findById(id);
     await user.$query().update(data);
 
@@ -46,6 +48,12 @@ class UserService {
     }
 
     return user;
+  }
+
+  public static async changeAvatar(id: string, avatarLink: string) {
+    const user = await User.query().findById(id);
+
+    return user.$query().update({ avatar: avatarLink });
   }
 
   public static async changePassword(id: string, password: string) {

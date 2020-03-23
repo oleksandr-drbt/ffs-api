@@ -6,15 +6,16 @@ dotenv.config({ path: path.resolve(path.join(__dirname, '..', '..', envPath)) })
 
 const config = {
   server: {
+    url: process.env.APP_URL || 'http://localhost',
     port: parseInt(process.env.APP_PORT || '3001'),
   },
   db: {
-    client: process.env.DB_CLIENT || '',
-    host: process.env.DB_HOST || '',
-    port: process.env.DB_PORT || '',
-    database: process.env.DB_DATABASE || '',
-    user: process.env.DB_USER || '',
-    password: process.env.DB_PASSWORD || '',
+    client: process.env.DB_CLIENT || 'pg',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || '5432',
+    database: process.env.DB_DATABASE || 'app',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'password',
   },
   jwt: {
     secret: process.env.JWT_SECRET || '',
