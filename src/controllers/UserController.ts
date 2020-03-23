@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { validator } from '../libs/validator';
+import imageUploader from '../libs/imageUploader';
 import UserService from '../services/UserService';
 import PasswordService from '../services/PasswordService';
+import AvatarService from '../services/AvatarService';
 import { editUserSchema } from '../schemas/userSchemas';
 import { changePasswordSchema } from '../schemas/passwordSchemas';
 import { USER_NOT_FOUND, PASSWORD_NOT_CORRECT } from '../constants/errorMessages';
@@ -46,13 +48,35 @@ class UserController {
     const errors = validator.validate(userData, editUserSchema);
 
     if (errors) {
-      res.status(400).send(errors);
+      res.status(400).json(errors);
       return;
     }
 
     // @ts-ignore
     user = await UserService.update(user.id, userData);
-    res.send(user);
+    res.json(user);
+  }
+
+  /**
+   * Upload user's avatar
+   * @param req
+   * @param res
+   */
+  public static async uploadAvatar(req: Request, res: Response) {
+    const upload = imageUploader.single('avatar');
+
+    upload(req, res, async (err) => {
+      if (err) {
+        res.status(400).json({ message: err.message });
+        return;
+      }
+
+      const filePath = await AvatarService.save(req.file, 'user/avatars');
+      // @ts-ignore
+      const { id } = req.user;
+      await UserService.changeAvatar(id, filePath);
+      res.json({ message: 'Avatar has been uploaded successfully.', avatar: filePath });
+    });
   }
 
   /**
@@ -65,7 +89,7 @@ class UserController {
     const errors = validator.validate(req.body, changePasswordSchema);
 
     if (errors) {
-      res.status(400).send(errors);
+      res.status(400).json(errors);
       return;
     }
 
@@ -79,7 +103,7 @@ class UserController {
     }
 
     await UserService.changePassword(id, new_password);
-    res.send({ message: 'Password has been changed successfully.' });
+    res.json({ message: 'Password has been changed successfully.' });
   }
 
   /**
@@ -92,7 +116,7 @@ class UserController {
     const { id } = req.user;
     await UserService.remove(id);
 
-    res.send({ message: 'User has been deleted successfully!' });
+    res.json({ message: 'User has been deleted successfully!' });
   }
 }
 
