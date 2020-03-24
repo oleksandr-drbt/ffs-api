@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "target": "ES2019",
     "module": "commonjs",
     "lib": ["es2019"],
@@ -10,7 +11,8 @@
     "rootDirs": ["src", "tests"],
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
   },
   "include": [
     "src/**/*",

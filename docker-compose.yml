@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  web:
+    build: .
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    environment:
+      - WAIT_HOSTS=db:5432
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_PORT=5432
+
+  db:
+    image: postgres:latest
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
