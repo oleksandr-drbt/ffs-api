@@ -1,5 +1,10 @@
 import BaseModel from './BaseModel';
 
+export interface ISkill {
+  id?: string;
+  name: string;
+}
+
 class Skill extends BaseModel {
   id!: string;
   name!: string;

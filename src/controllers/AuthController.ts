@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { validator } from '../libs/validator';
-import { createUserSchema } from '../schemas/userSchemas';
+import { registerUserSchema } from '../schemas/userSchemas';
 import UserService from '../services/UserService';
 import PasswordService from '../services/PasswordService';
 import TokenService from '../services/TokenService';
 import CookieService from '../services/CookieService';
+import { LOGOUT_SUCCESS } from '../constants/successMessages';
 import {
   PASSWORD_NOT_CORRECT,
   USER_EXISTS,
@@ -28,7 +29,7 @@ class AuthController {
       return;
     }
 
-    const errors = validator.validate(userData, createUserSchema);
+    const errors = validator.validate(userData, registerUserSchema);
 
     if (errors) {
       res.status(400).json({ errors });
@@ -93,7 +94,7 @@ class AuthController {
    */
   public static async logout(req: Request, res: Response): Promise<void> {
     CookieService.clearAuthCookie(res);
-    res.send({ message: 'Success logout!' });
+    res.send({ message: LOGOUT_SUCCESS });
   }
 }
 

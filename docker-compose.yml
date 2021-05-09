@@ -1,13 +1,12 @@
 version: "3.7"
 
 services:
-  web:
+  app:
     build: .
     ports:
       - ${APP_PORT}:3000
     volumes:
       - .:/app
-      - /app/node_modules
     depends_on:
       - db
     environment:
@@ -15,9 +14,10 @@ services:
       - NODE_ENV=development
       - DB_HOST=db
       - DB_PORT=5432
+    command: sh -c "npm install && /wait && npm run migrate && npm start"
 
   db:
-    image: postgres:latest
+    image: postgres:13-alpine
     ports:
       - ${DB_PORT}:5432
     environment:

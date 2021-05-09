@@ -8,17 +8,18 @@ export const phoneRules = Joi.string().max(20);
 export const positionRules = Joi.string().max(100);
 export const passwordRules = Joi.string().min(6).max(255);
 
-export const createUserSchema = Joi.object().keys({
+export const registerUserSchema = Joi.object().keys({
   first_name: firstNameRules.required(),
   last_name: lastNameRules.required(),
   email: emailRules.required(),
   password: passwordRules.required(),
+  password_confirmation: Joi.ref('password'),
 });
 
 export const editUserSchema = Joi.object().keys({
   first_name: firstNameRules.optional(),
   last_name: lastNameRules.optional(),
-  phone: phoneRules.optional(),
-  position: positionRules.optional(),
+  phone: phoneRules.allow(null, '').optional(),
+  position: positionRules.allow(null, '').optional(),
   skills: Joi.array().items(skillNameRules),
 });

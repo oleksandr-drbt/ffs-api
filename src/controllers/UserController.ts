@@ -3,10 +3,11 @@ import { validator } from '../libs/validator';
 import imageUploader from '../libs/imageUploader';
 import UserService from '../services/UserService';
 import PasswordService from '../services/PasswordService';
-import AvatarService from '../services/AvatarService';
+import ImageService from '../services/ImageService';
 import { editUserSchema } from '../schemas/userSchemas';
 import { changePasswordSchema } from '../schemas/passwordSchemas';
 import { USER_NOT_FOUND, PASSWORD_NOT_CORRECT } from '../constants/errorMessages';
+import { AVATAR_UPLOADED_SUCCESS, PASSWORD_CHANGED, USER_DELETED } from '../constants/successMessages';
 
 class UserController {
   /**
@@ -71,11 +72,14 @@ class UserController {
         return;
       }
 
-      const filePath = await AvatarService.save(req.file, 'user/avatars');
+      const avatar = await ImageService.save(req.file, ImageService.AVATARS_DIRECTORY);
       // @ts-ignore
       const { id } = req.user;
-      await UserService.changeAvatar(id, filePath);
-      res.json({ message: 'Avatar has been uploaded successfully.', avatar: filePath });
+      await UserService.changeAvatar(id, avatar);
+      res.json({
+        message: AVATAR_UPLOADED_SUCCESS,
+        avatarUrl: ImageService.generateImageUrl(avatar.name, ImageService.AVATARS_DIRECTORY),
+      });
     });
   }
 
@@ -103,7 +107,7 @@ class UserController {
     }
 
     await UserService.changePassword(id, new_password);
-    res.json({ message: 'Password has been changed successfully.' });
+    res.json({ message: PASSWORD_CHANGED });
   }
 
   /**
@@ -116,7 +120,7 @@ class UserController {
     const { id } = req.user;
     await UserService.remove(id);
 
-    res.json({ message: 'User has been deleted successfully!' });
+    res.json({ message: USER_DELETED });
   }
 }
 

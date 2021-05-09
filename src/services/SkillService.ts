@@ -1,8 +1,7 @@
-import Skill from '../models/Skill';
-import { SkillInterface } from '../interfaces/SkillInterface';
+import Skill, { ISkill } from '../models/Skill';
 
 class SkillService {
-  public static async create(skillData: SkillInterface) {
+  public static async create(skillData: ISkill) {
     return Skill.query().insert(skillData);
   }
 
