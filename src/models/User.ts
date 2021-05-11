@@ -9,6 +9,7 @@ export interface IUser {
   first_name?: string;
   last_name?: string;
   email?: string;
+  role?: string;
   phone?: string;
   position?: string;
   avatarUrl?: string;
@@ -20,6 +21,7 @@ class User extends BaseModel {
   first_name!: string;
   last_name!: string;
   email!: string;
+  role!: string;
   phone?: string | null;
   position?: string | null;
   avatar?: IImage | null;
@@ -37,6 +39,7 @@ class User extends BaseModel {
       first_name: { type: 'string', minLength: 1, maxLength: 100 },
       last_name: { type: 'string', minLength: 1, maxLength: 100 },
       email: { type: 'string', minLength: 1, maxLength: 255 },
+      role: { type: 'string', enum: ['student', 'teacher'], default: 'student' },
       phone: { type: ['string', 'null'], maxLength: 20 },
       position: { type: ['string', 'null'], maxLength: 100 },
       password: { type: 'string', minLength: 1, maxLength: 255 },

@@ -9,7 +9,9 @@ export interface ICreateUser {
   first_name: string;
   last_name: string;
   email: string;
+  role?: string;
   password: string;
+  password_confirmation: string;
 }
 
 export interface IEditUser {
@@ -25,6 +27,7 @@ class UserService {
     const {
       email,
       password,
+      role,
       first_name: firstName,
       last_name: lastName,
     } = userData;
@@ -38,6 +41,7 @@ class UserService {
       last_name: lastName,
       email: email,
       password: hashedPassword,
+      role: role,
     });
 
     return this.find(userId);

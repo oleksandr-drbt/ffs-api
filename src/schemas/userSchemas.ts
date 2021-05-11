@@ -4,6 +4,7 @@ import { skillNameRules } from './skillSchemas';
 export const firstNameRules = Joi.string().max(100);
 export const lastNameRules = Joi.string().max(100);
 export const emailRules = Joi.string().email().max(255);
+export const roleRules = Joi.string().valid('student', 'teacher').max(20);
 export const phoneRules = Joi.string().max(20);
 export const positionRules = Joi.string().max(100);
 export const passwordRules = Joi.string().min(6).max(255);
@@ -12,6 +13,7 @@ export const registerUserSchema = Joi.object().keys({
   first_name: firstNameRules.required(),
   last_name: lastNameRules.required(),
   email: emailRules.required(),
+  role: roleRules.optional(),
   password: passwordRules.required(),
   password_confirmation: Joi.ref('password'),
 });
