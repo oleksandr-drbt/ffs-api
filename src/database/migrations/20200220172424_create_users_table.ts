@@ -9,6 +9,7 @@ export async function up(knex: Knex): Promise<any> {
     table.enum('role', ['student', 'teacher']).defaultTo('student');
     table.string('phone', 20);
     table.string('position', 100);
+    table.string('description', 255);
     table.string('password', 255).notNullable();
     table.timestamps(true, true);
   });

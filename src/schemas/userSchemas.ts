@@ -7,6 +7,7 @@ export const emailRules = Joi.string().email().max(255);
 export const roleRules = Joi.string().valid('student', 'teacher').max(20);
 export const phoneRules = Joi.string().max(20);
 export const positionRules = Joi.string().max(100);
+export const descriptionRules = Joi.string().max(255);
 export const passwordRules = Joi.string().min(6).max(255);
 
 export const registerUserSchema = Joi.object().keys({
@@ -23,5 +24,6 @@ export const editUserSchema = Joi.object().keys({
   last_name: lastNameRules.optional(),
   phone: phoneRules.allow(null, '').optional(),
   position: positionRules.allow(null, '').optional(),
+  description: descriptionRules.allow(null, '').optional(),
   skills: Joi.array().items(skillNameRules),
 });
