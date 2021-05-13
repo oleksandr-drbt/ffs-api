@@ -48,28 +48,31 @@ class UserService {
   }
 
   public static async find(id: string = '') {
-    return User.query().findById(id).withGraphFetched('[avatar, skills]');
+    return User.query().findById(id).withGraphFetched(User.relationsExpr);
   }
 
   public static async findByEmail(email: string = '') {
-    return User.query().findOne({ email: email }).withGraphFetched('[avatar, skills]');
+    return User.query().findOne({ email: email }).withGraphFetched(User.relationsExpr);
   }
 
   public static async findAll() {
-    return User.query().withGraphFetched('[avatar, skills]');
+    return User.query().withGraphFetched(User.relationsExpr);
   }
 
   public static async remove(id: string = '') {
-    return User.query().deleteById(id);
+    const user = await this.find(id);
+
+    if (user.avatar) {
+      await user.$relatedQuery<Image>('avatar').delete();
+    }
+
+    return user.$query().delete();
   }
 
   public static async update(id: string, userData: IEditUser) {
     const { skills = [] } = userData;
     const user = await User.query().patchAndFetchById(id, userData);
-
-    if (skills.length) {
-      await this.addSkills(user, skills);
-    }
+    await this.addSkills(user, skills);
 
     return this.find(id);
   }
@@ -93,16 +96,17 @@ class UserService {
   }
 
   private static async addSkills(user: User, skills: string[]) {
-    return skills.map(async (skillName) => {
-      await user.$relatedQuery<Skill>('skills').unrelate();
+    await user.$relatedQuery<Skill>('skills').unrelate();
+
+    await skills.map(async (skillName) => {
       const skill = await SkillService.findByName(skillName);
 
       if (skill) {
-        return user.$relatedQuery<Skill>('skills')
+        await user.$relatedQuery<Skill>('skills')
           .relate(skill);
       }
 
-      return user.$relatedQuery<Skill>('skills').insert({
+      await user.$relatedQuery<Skill>('skills').insert({
         name: skillName,
       });
     });

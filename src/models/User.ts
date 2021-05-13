@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 import { Model } from 'objection';
 import Skill, { ISkill } from './Skill';
 import Image, { IImage } from './Image';
+import Work, { IWork } from './Work';
 import ImageService from '../services/ImageService';
 
 export interface IUser {
@@ -15,6 +16,7 @@ export interface IUser {
   description?: string;
   avatarUrl?: string;
   skills?: ISkill[];
+  works?: IWork[];
 }
 
 class User extends BaseModel {
@@ -33,6 +35,8 @@ class User extends BaseModel {
 
   static tableName = 'users';
   static hidden = ['avatar', 'password', 'created_at', 'updated_at'];
+
+  static relationsExpr = '[avatar, skills, works(orderByCreatedAt, onlyPublished).image]';
 
   static jsonSchema = {
     type: 'object',
@@ -84,6 +88,14 @@ class User extends BaseModel {
           to: 'users_skills.skill_id',
         },
         to: 'skills.id',
+      },
+    },
+    works: {
+      relation: Model.HasManyRelation,
+      modelClass: Work,
+      join: {
+        from: 'users.id',
+        to: 'works.user_id',
       },
     },
   };

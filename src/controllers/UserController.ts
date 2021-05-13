@@ -72,10 +72,16 @@ class UserController {
         return;
       }
 
-      const avatar = await ImageService.save(req.file, ImageService.AVATARS_DIRECTORY);
       // @ts-ignore
-      const { id } = req.user;
+      const { id, avatar: oldAvatar } = req.user;
+
+      if (oldAvatar) {
+        await ImageService.remove(oldAvatar.path);
+      }
+
+      const avatar = await ImageService.save(req.file, ImageService.AVATARS_DIRECTORY);
       await UserService.changeAvatar(id, avatar);
+
       res.json({
         message: AVATAR_UPLOADED_SUCCESS,
         avatarUrl: ImageService.generateImageUrl(avatar.name, ImageService.AVATARS_DIRECTORY),
@@ -117,8 +123,12 @@ class UserController {
    */
   public static async remove(req: Request, res: Response): Promise<void> {
     // @ts-ignore
-    const { id } = req.user;
+    const { id, avatar } = req.user;
     await UserService.remove(id);
+
+    if (avatar) {
+      await ImageService.remove(avatar.path);
+    }
 
     res.json({ message: USER_DELETED });
   }

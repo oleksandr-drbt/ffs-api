@@ -3,6 +3,7 @@ import auth from '../middlewares/auth';
 import AuthController from '../controllers/AuthController';
 import UserController from '../controllers/UserController';
 import SkillController from '../controllers/SkillController';
+import WorkController from '../controllers/WorkController';
 
 const router = Router();
 
@@ -20,5 +21,10 @@ router.delete('/user/delete-account', auth, UserController.remove);
 
 router.post('/skills', auth, SkillController.create);
 router.get('/skills', auth, SkillController.list);
+
+router.post('/user/works', auth, WorkController.create);
+router.get('/user/works', auth, WorkController.list);
+router.put('/user/works/:id', auth, WorkController.update);
+router.delete('/user/works/:id', auth, WorkController.remove);
 
 export default router;
