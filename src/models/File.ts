@@ -1,41 +1,53 @@
 import BaseModel from './BaseModel';
 import { Model } from 'objection';
-import User from './User';
+import Project from './Project';
+import FileService from '../services/FileService';
 
-export interface IImage {
+export interface IFile {
   id?: string;
   name: string;
+  original_name: string;
   path: string;
 }
 
-class Image extends BaseModel {
+class File extends BaseModel {
   id!: string;
   name!: string;
+  original_name!: string;
   path!: string;
   created_at?: string;
   updated_at?: string;
 
-  static tableName = 'images';
-  static hidden = ['entity_id', 'path', 'created_at', 'updated_at'];
+  static tableName = 'files';
+  static hidden = ['project_id', 'path', 'created_at', 'updated_at'];
 
   static jsonSchema = {
     type: 'object',
     properties: {
       id: { type: 'uuid' },
       name: { type: 'string', minLength: 1, maxLength: 255 },
+      original_name: { type: 'string', minLength: 1, maxLength: 255 },
       path: { type: 'string', minLength: 1, maxLength: 255 },
       created_at: { type: 'datetime' },
       updated_at: { type: 'datetime' },
     },
   };
 
+  static get virtualAttributes() {
+    return ['fileUrl'];
+  }
+
+  get fileUrl() {
+    return FileService.generateFileUrl(this.name, FileService.PROJECTS_DIRECTORY);
+  }
+
   static relationMappings = {
-    user: {
+    project: {
       relation: Model.BelongsToOneRelation,
-      modelClass: User,
+      modelClass: Project,
       join: {
-        from: 'images.entity_id',
-        to: 'users.id',
+        from: 'files.project_id',
+        to: 'projects.id',
       },
     },
   };
@@ -45,4 +57,4 @@ class Image extends BaseModel {
   }
 }
 
-export default Image;
+export default File;

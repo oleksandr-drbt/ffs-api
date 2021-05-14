@@ -31,7 +31,7 @@ class UserController {
     const user = await UserService.find(id);
 
     if (!user) {
-      res.status(404).json({ error: USER_NOT_FOUND });
+      res.status(404).json({ message: USER_NOT_FOUND });
       return;
     }
 

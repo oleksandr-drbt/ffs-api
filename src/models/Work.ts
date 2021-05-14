@@ -65,10 +65,10 @@ class Work extends BaseModel {
         builder.where('is_published', true);
       },
     };
-  };
+  }
 
   static relationMappings = {
-    userId: {
+    user: {
       relation: Model.BelongsToOneRelation,
       modelClass: User,
       join: {

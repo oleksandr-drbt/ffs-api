@@ -15,3 +15,6 @@ export const IMAGE_NOT_VALID_TYPE = 'Only .png, .svg, .jpg and .jpeg format allo
 
 export const WORK_NOT_FOUND = 'Work not found.';
 export const USER_DOESNT_HAVE_ACCESS_TO_WORK = 'You don\'t have an access to this work.';
+
+export const PROJECT_NOT_FOUND = 'Project not found.';
+export const USER_DOESNT_HAVE_ACCESS_TO_PROJECT = 'You don\'t have an access to this project.';

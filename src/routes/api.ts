@@ -4,6 +4,7 @@ import AuthController from '../controllers/AuthController';
 import UserController from '../controllers/UserController';
 import SkillController from '../controllers/SkillController';
 import WorkController from '../controllers/WorkController';
+import ProjectController from '../controllers/ProjectController';
 
 const router = Router();
 
@@ -26,5 +27,10 @@ router.post('/user/works', auth, WorkController.create);
 router.get('/user/works', auth, WorkController.list);
 router.put('/user/works/:id', auth, WorkController.update);
 router.delete('/user/works/:id', auth, WorkController.remove);
+
+router.post('/user/projects', auth, ProjectController.create);
+router.get('/user/projects', auth, ProjectController.list);
+router.put('/user/projects/:id', auth, ProjectController.update);
+router.delete('/user/projects/:id', auth, ProjectController.remove);
 
 export default router;

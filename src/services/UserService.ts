@@ -65,6 +65,7 @@ class UserService {
     if (user.avatar) {
       await user.$relatedQuery<Image>('avatar').delete();
     }
+    await user.$relatedQuery<Skill>('skills').unrelate();
 
     return user.$query().delete();
   }
@@ -72,7 +73,7 @@ class UserService {
   public static async update(id: string, userData: IEditUser) {
     const { skills = [] } = userData;
     const user = await User.query().patchAndFetchById(id, userData);
-    await this.addSkills(user, skills);
+    await SkillService.addSkillsToEntity(user, skills);
 
     return this.find(id);
   }
@@ -93,23 +94,6 @@ class UserService {
     const user = await User.query().findById(id);
 
     return user.$query().update({ password: hashedPassword });
-  }
-
-  private static async addSkills(user: User, skills: string[]) {
-    await user.$relatedQuery<Skill>('skills').unrelate();
-
-    await skills.map(async (skillName) => {
-      const skill = await SkillService.findByName(skillName);
-
-      if (skill) {
-        await user.$relatedQuery<Skill>('skills')
-          .relate(skill);
-      }
-
-      await user.$relatedQuery<Skill>('skills').insert({
-        name: skillName,
-      });
-    });
   }
 }
 

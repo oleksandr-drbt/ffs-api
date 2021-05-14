@@ -3,9 +3,9 @@ import multer from 'multer';
 import WorkService from '../services/WorkService';
 import ImageService from '../services/ImageService';
 import WorkPolicy from '../policies/WorkPolicy';
+import { imageFileFilter } from '../libs/filters';
 import { validator } from '../libs/validator';
 import { createWorkSchema, editWorkSchema } from '../schemas/workSchemas';
-import { imageFileFilter } from '../libs/filters';
 import { USER_DOESNT_HAVE_ACCESS_TO_WORK, WORK_NOT_FOUND } from '../constants/errorMessages';
 import { WORK_DELETED } from '../constants/successMessages';
 
@@ -46,7 +46,6 @@ class WorkController {
 
       // @ts-ignore
       const { id } = req.user;
-
       const work = await WorkService.create({
         ...workData,
         image: image,
@@ -81,13 +80,13 @@ class WorkController {
     const user = req.user;
 
     if (!work) {
-      res.status(404).json({ error: WORK_NOT_FOUND });
+      res.status(404).json({ message: WORK_NOT_FOUND });
       return;
     }
 
     // @ts-ignore
     if (!WorkPolicy.canEdit(user, work)) {
-      res.status(403).json({ error: USER_DOESNT_HAVE_ACCESS_TO_WORK });
+      res.status(403).json({ message: USER_DOESNT_HAVE_ACCESS_TO_WORK });
       return;
     }
 
@@ -125,13 +124,9 @@ class WorkController {
         await ImageService.remove(work.image.path);
       }
 
-      // @ts-ignore
-      const { id: userId } = req.user;
-
       work = await WorkService.update(id, {
         ...workData,
         image: image,
-        userId: userId,
         isImageRemoved: workData.is_image_removed === 'true',
       });
 
@@ -150,13 +145,13 @@ class WorkController {
     const user = req.user;
 
     if (!work) {
-      res.status(404).json({ error: WORK_NOT_FOUND });
+      res.status(404).json({ message: WORK_NOT_FOUND });
       return;
     }
 
     // @ts-ignore
     if (!WorkPolicy.canDelete(user, work)) {
-      res.status(403).json({ error: USER_DOESNT_HAVE_ACCESS_TO_WORK });
+      res.status(403).json({ message: USER_DOESNT_HAVE_ACCESS_TO_WORK });
       return;
     }
 

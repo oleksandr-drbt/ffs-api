@@ -18,7 +18,6 @@ export interface IEditWork {
   image?: IImage;
   is_published?: string;
   isImageRemoved?: boolean;
-  userId: string;
 }
 
 class WorkService {
