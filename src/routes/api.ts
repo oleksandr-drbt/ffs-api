@@ -6,6 +6,7 @@ import SkillController from '../controllers/SkillController';
 import WorkController from '../controllers/WorkController';
 import ProjectController from '../controllers/ProjectController';
 import SearchController from '../controllers/SearchController';
+import DashboardController from "../controllers/DashboardController";
 
 const router = Router();
 
@@ -39,5 +40,7 @@ router.post('/projects/:id/cancel-request', auth, ProjectController.cancelReques
 
 router.get('/search/users', auth, SearchController.searchForUsers);
 router.get('/search/projects', auth, SearchController.searchForProjects);
+
+router.get('/user/dashboard', auth, DashboardController.get);
 
 export default router;

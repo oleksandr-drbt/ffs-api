@@ -60,7 +60,11 @@ class Project extends BaseModel {
       },
 
       onlyTaken(builder: QueryBuilder<any>) {
-        builder.where('status', "in ('inprogress', 'done')");
+        builder.whereIn('status', ['inprogress', 'done']);
+      },
+
+      onlyFromBacklog(builder: QueryBuilder<any>) {
+        builder.where('status', 'backlog');
       },
     };
   }

@@ -4,6 +4,7 @@ import Skill, { ISkill } from './Skill';
 import Image, { IImage } from './Image';
 import Work, { IWork } from './Work';
 import ImageService from '../services/ImageService';
+import ProjectUser from './ProjectUser';
 
 export interface IUser {
   id?: string;
