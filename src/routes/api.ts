@@ -34,6 +34,9 @@ router.get('/user/projects', auth, ProjectController.list);
 router.put('/user/projects/:id', auth, ProjectController.update);
 router.delete('/user/projects/:id', auth, ProjectController.remove);
 
+router.post('/projects/:id/request', auth, ProjectController.request);
+router.post('/projects/:id/cancel-request', auth, ProjectController.cancelRequest);
+
 router.get('/search/users', auth, SearchController.searchForUsers);
 router.get('/search/projects', auth, SearchController.searchForProjects);
 

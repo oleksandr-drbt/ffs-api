@@ -15,6 +15,7 @@ export interface IProject {
   userId?: string;
   skills?: ISkill[];
   files?: string[];
+  users?: string[];
 }
 
 class Project extends BaseModel {
@@ -31,7 +32,7 @@ class Project extends BaseModel {
 
   static tableName = 'projects';
 
-  static relationsExpr = '[user.avatar, skills, files]';
+  static relationsExpr = '[user.avatar, skills, files, participants]';
 
   static jsonSchema = {
     type: 'object',
@@ -91,6 +92,19 @@ class Project extends BaseModel {
       join: {
         from: 'projects.id',
         to: 'files.project_id',
+      },
+    },
+    participants: {
+      relation: Model.ManyToManyRelation,
+      modelClass: User,
+      join: {
+        from: 'projects.id',
+        through: {
+          from: 'projects_users.project_id',
+          to: 'projects_users.user_id',
+          extra: ['is_accepted', 'review'],
+        },
+        to: 'users.id',
       },
     },
   };

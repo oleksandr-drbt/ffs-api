@@ -18,3 +18,4 @@ export const USER_DOESNT_HAVE_ACCESS_TO_WORK = 'You don\'t have an access to thi
 
 export const PROJECT_NOT_FOUND = 'Project not found.';
 export const USER_DOESNT_HAVE_ACCESS_TO_PROJECT = 'You don\'t have an access to this project.';
+export const USER_ALREADY_REQUESTED_PROJECT = 'You have already requested this project.';

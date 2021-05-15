@@ -3,6 +3,7 @@ import Project from '../models/Project';
 import SkillService from './SkillService';
 import File, { IFile } from '../models/File';
 import Skill from '../models/Skill';
+import User from '../models/User';
 
 export interface ICreateProject {
   title: string;
@@ -119,6 +120,17 @@ class ProjectService {
     await project.$relatedQuery<Skill>('skills').unrelate();
 
     return project.$query().delete();
+  }
+
+  public static async request(id: string, user: User) {
+    const project = await this.findById(id);
+    await project.$relatedQuery<User>('participants').relate(user);
+  }
+
+  public static async cancelRequest(id: string, user: User) {
+    const project = await this.findById(id);
+    // @ts-ignore
+    await project.$relatedQuery<User>('participants').where('id', user.id).unrelate();
   }
 }
 

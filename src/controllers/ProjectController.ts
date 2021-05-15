@@ -6,8 +6,12 @@ import ProjectPolicy from '../policies/ProjectPolicy';
 import File, { IFile } from '../models/File';
 import { validator } from '../libs/validator';
 import { createProjectSchema, editProjectSchema } from '../schemas/projectSchemas';
-import { PROJECT_NOT_FOUND, USER_DOESNT_HAVE_ACCESS_TO_PROJECT } from '../constants/errorMessages';
-import { PROJECT_DELETED } from '../constants/successMessages';
+import {
+  PROJECT_NOT_FOUND,
+  USER_ALREADY_REQUESTED_PROJECT,
+  USER_DOESNT_HAVE_ACCESS_TO_PROJECT,
+} from '../constants/errorMessages';
+import { PROJECT_DELETED, PROJECT_REQUEST_CANCELED, PROJECT_REQUESTED } from '../constants/successMessages';
 
 class ProjectController {
   /**
@@ -176,6 +180,60 @@ class ProjectController {
     await ProjectService.remove(id);
 
     res.json({ message: PROJECT_DELETED });
+  }
+
+  /**
+   * Request project
+   * @param req
+   * @param res
+   */
+  public static async request(req: Request, res: Response) {
+    const { id } = req.params;
+    const project = await ProjectService.findById(id);
+    const user = req.user;
+
+    if (!project) {
+      res.status(404).json({ message: PROJECT_NOT_FOUND });
+      return;
+    }
+
+    // @ts-ignore
+    if (!ProjectPolicy.canRequest(user, project)) {
+      res.status(403).json({ message: USER_ALREADY_REQUESTED_PROJECT });
+      return;
+    }
+
+    // @ts-ignore
+    await ProjectService.request(id, user);
+
+    res.json({ message: PROJECT_REQUESTED });
+  }
+
+  /**
+   * Request project
+   * @param req
+   * @param res
+   */
+  public static async cancelRequest(req: Request, res: Response) {
+    const { id } = req.params;
+    const project = await ProjectService.findById(id);
+    const user = req.user;
+
+    if (!project) {
+      res.status(404).json({ message: PROJECT_NOT_FOUND });
+      return;
+    }
+
+    // @ts-ignore
+    if (!ProjectPolicy.canCancelRequest(user, project)) {
+      res.status(403).json({ message: USER_ALREADY_REQUESTED_PROJECT });
+      return;
+    }
+
+    // @ts-ignore
+    await ProjectService.cancelRequest(id, user);
+
+    res.json({ message: PROJECT_REQUEST_CANCELED });
   }
 }
 
