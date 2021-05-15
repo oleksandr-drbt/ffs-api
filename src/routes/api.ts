@@ -5,6 +5,7 @@ import UserController from '../controllers/UserController';
 import SkillController from '../controllers/SkillController';
 import WorkController from '../controllers/WorkController';
 import ProjectController from '../controllers/ProjectController';
+import SearchController from '../controllers/SearchController';
 
 const router = Router();
 
@@ -32,5 +33,8 @@ router.post('/user/projects', auth, ProjectController.create);
 router.get('/user/projects', auth, ProjectController.list);
 router.put('/user/projects/:id', auth, ProjectController.update);
 router.delete('/user/projects/:id', auth, ProjectController.remove);
+
+router.get('/search/users', auth, SearchController.searchForUsers);
+router.get('/search/projects', auth, SearchController.searchForProjects);
 
 export default router;

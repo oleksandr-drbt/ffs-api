@@ -71,6 +71,10 @@ class ProjectService {
       .withGraphFetched(Project.relationsExpr);
   }
 
+  public static async findAll() {
+    return Project.query().orderBy('updated_at', 'desc').withGraphFetched(Project.relationsExpr);
+  }
+
   public static async update(id: string, projectData: IEditProject) {
     const {
       title,

@@ -1,4 +1,5 @@
 import BaseModel from './BaseModel';
+import { QueryBuilder } from "objection";
 
 export interface ISkill {
   id?: string;
