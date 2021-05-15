@@ -36,7 +36,9 @@ router.put('/user/projects/:id', auth, ProjectController.update);
 router.delete('/user/projects/:id', auth, ProjectController.remove);
 
 router.post('/projects/:id/request', auth, ProjectController.request);
-router.post('/projects/:id/cancel-request', auth, ProjectController.cancelRequest);
+router.delete('/projects/:id/cancel-request', auth, ProjectController.cancelRequest);
+router.put('/projects/:id/accept-user', auth, ProjectController.acceptUser);
+router.delete('/projects/:id/remove-request', auth, ProjectController.removeUserRequest);
 
 router.get('/search/users', auth, SearchController.searchForUsers);
 router.get('/search/projects', auth, SearchController.searchForProjects);

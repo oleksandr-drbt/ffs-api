@@ -4,6 +4,7 @@ import SkillService from './SkillService';
 import File, { IFile } from '../models/File';
 import Skill from '../models/Skill';
 import User from '../models/User';
+import ProjectUser from '../models/ProjectUser';
 
 export interface ICreateProject {
   title: string;
@@ -68,12 +69,12 @@ class ProjectService {
   }
 
   public static async findAllByUserId(userId: string = '') {
-    return Project.query().where('user_id', userId).orderBy('updated_at', 'desc')
+    return Project.query().where('user_id', userId).orderBy('created_at', 'desc')
       .withGraphFetched(Project.relationsExpr);
   }
 
   public static async findAll() {
-    return Project.query().orderBy('updated_at', 'desc').withGraphFetched(Project.relationsExpr);
+    return Project.query().orderBy('created_at', 'desc').withGraphFetched(Project.relationsExpr);
   }
 
   public static async update(id: string, projectData: IEditProject) {
@@ -131,6 +132,20 @@ class ProjectService {
     const project = await this.findById(id);
     // @ts-ignore
     await project.$relatedQuery<User>('participants').where('id', user.id).unrelate();
+  }
+
+  public static async acceptUser(id: string, userId: string) {
+    await ProjectUser.query().where({
+      user_id: userId,
+      project_id: id,
+    }).patch({ is_accepted: true });
+  }
+
+  public static async removeRequest(id: string, userId: string) {
+    await ProjectUser.query().where({
+      user_id: userId,
+      project_id: id,
+    }).delete();
   }
 }
 

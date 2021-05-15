@@ -11,7 +11,13 @@ import {
   USER_ALREADY_REQUESTED_PROJECT,
   USER_DOESNT_HAVE_ACCESS_TO_PROJECT,
 } from '../constants/errorMessages';
-import { PROJECT_DELETED, PROJECT_REQUEST_CANCELED, PROJECT_REQUESTED } from '../constants/successMessages';
+import {
+  PROJECT_DELETED,
+  PROJECT_REQUEST_CANCELED,
+  PROJECT_REQUESTED,
+  PROJECT_USER_ACCEPTED,
+  PROJECT_USER_REQUEST_DELETED
+} from '../constants/successMessages';
 
 class ProjectController {
   /**
@@ -234,6 +240,62 @@ class ProjectController {
     await ProjectService.cancelRequest(id, user);
 
     res.json({ message: PROJECT_REQUEST_CANCELED });
+  }
+
+  /**
+   * Accept user for project
+   * @param req
+   * @param res
+   */
+  public static async acceptUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const { userId } = req.query;
+    const project = await ProjectService.findById(id);
+    const user = req.user;
+
+    if (!project) {
+      res.status(404).json({ message: PROJECT_NOT_FOUND });
+      return;
+    }
+
+    // @ts-ignore
+    if (!ProjectPolicy.canAcceptUser(user, project)) {
+      res.status(403).json({ message: USER_DOESNT_HAVE_ACCESS_TO_PROJECT });
+      return;
+    }
+
+    // @ts-ignore
+    await ProjectService.acceptUser(id, userId);
+
+    res.json({ message: PROJECT_USER_ACCEPTED });
+  }
+
+  /**
+   * Remove user request
+   * @param req
+   * @param res
+   */
+  public static async removeUserRequest(req: Request, res: Response) {
+    const { id } = req.params;
+    const { userId } = req.query;
+    const project = await ProjectService.findById(id);
+    const user = req.user;
+
+    if (!project) {
+      res.status(404).json({ message: PROJECT_NOT_FOUND });
+      return;
+    }
+
+    // @ts-ignore
+    if (!ProjectPolicy.canRemoveUserRequest(user, project)) {
+      res.status(403).json({ message: USER_DOESNT_HAVE_ACCESS_TO_PROJECT });
+      return;
+    }
+
+    // @ts-ignore
+    await ProjectService.removeRequest(id, userId);
+
+    res.json({ message: PROJECT_USER_REQUEST_DELETED });
   }
 }
 
