@@ -4,16 +4,6 @@ import User from './User';
 import Image, { IImage } from './Image';
 import ImageService from '../services/ImageService';
 
-export interface IWork {
-  id?: string;
-  title: string;
-  description?: string;
-  link?: string;
-  imageUrl?: string;
-  isPublished: boolean;
-  userId?: string;
-}
-
 class Work extends BaseModel {
   id?: string;
   title!: string;

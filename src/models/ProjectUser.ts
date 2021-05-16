@@ -6,6 +6,7 @@ import User from './User';
 class ProjectUser extends BaseModel {
   is_accepted!: boolean;
   review?: string;
+  completed_at?: string;
   created_at?: string;
   updated_at?: string;
 
@@ -16,6 +17,7 @@ class ProjectUser extends BaseModel {
     properties: {
       is_accepted: { type: 'boolean' },
       review: { type: 'string', maxLength: 2000 },
+      completed_at: { type: 'datetime' },
       created_at: { type: 'datetime' },
       updated_at: { type: 'datetime' },
     },

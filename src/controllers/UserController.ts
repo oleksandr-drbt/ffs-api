@@ -28,7 +28,7 @@ class UserController {
    */
   public static async get(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    const user = await UserService.find(id);
+    const user = await UserService.getProfile(id);
 
     if (!user) {
       res.status(404).json({ message: USER_NOT_FOUND });

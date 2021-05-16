@@ -10,3 +10,4 @@ export const PROJECT_REQUESTED = 'You have requested the project. Wait while the
 export const PROJECT_REQUEST_CANCELED = 'You have canceled request to the project';
 export const PROJECT_USER_ACCEPTED = 'You have accepted user to the project';
 export const PROJECT_USER_REQUEST_DELETED = 'User request to project has been deleted';
+export const PROJECT_DONE = 'Project has been successfully moved to done';

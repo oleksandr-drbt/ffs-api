@@ -147,6 +147,21 @@ class ProjectService {
       project_id: id,
     }).delete();
   }
+
+  public static async complete(id: string, reviews: any) {
+    await Project.query().findById(id).patch({ status: 'done' });
+    // @ts-ignore
+    await reviews.map(async ({ userId, review }) => {
+      await ProjectUser.query().where({
+        project_id: id,
+        user_id: userId,
+      }).patch({
+        is_accepted: true,
+        review: review,
+        completed_at: new Date().toISOString(),
+      });
+    });
+  }
 }
 
 export default ProjectService;

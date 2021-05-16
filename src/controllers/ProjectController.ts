@@ -13,6 +13,7 @@ import {
 } from '../constants/errorMessages';
 import {
   PROJECT_DELETED,
+  PROJECT_DONE,
   PROJECT_REQUEST_CANCELED,
   PROJECT_REQUESTED,
   PROJECT_USER_ACCEPTED,
@@ -296,6 +297,34 @@ class ProjectController {
     await ProjectService.removeRequest(id, userId);
 
     res.json({ message: PROJECT_USER_REQUEST_DELETED });
+  }
+
+  /**
+   * Accept user for project
+   * @param req
+   * @param res
+   */
+  public static async complete(req: Request, res: Response) {
+    const { id } = req.params;
+    const { reviews } = req.body;
+    const project = await ProjectService.findById(id);
+    const user = req.user;
+
+    if (!project) {
+      res.status(404).json({ message: PROJECT_NOT_FOUND });
+      return;
+    }
+
+    // @ts-ignore
+    if (!ProjectPolicy.canMoveToDone(user, project)) {
+      res.status(403).json({ message: USER_DOESNT_HAVE_ACCESS_TO_PROJECT });
+      return;
+    }
+
+    // @ts-ignore
+    await ProjectService.complete(id, reviews);
+
+    res.json({ message: PROJECT_DONE });
   }
 }
 

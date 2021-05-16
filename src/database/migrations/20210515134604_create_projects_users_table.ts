@@ -6,6 +6,7 @@ export async function up(knex: Knex): Promise<any> {
     table.uuid('user_id').unsigned().notNullable();
     table.boolean('is_accepted').defaultTo(false);
     table.string('review', 1000);
+    table.dateTime('completed_at');
     table.timestamps(true, true);
 
     table.foreign('project_id').references('id').inTable('projects')

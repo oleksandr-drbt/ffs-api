@@ -4,6 +4,7 @@ import Image, { IImage } from '../models/Image';
 import Skill from '../models/Skill';
 import PasswordService from './PasswordService';
 import SkillService from './SkillService';
+import Project from '../models/Project';
 
 export interface ICreateUser {
   first_name: string;
@@ -45,6 +46,11 @@ class UserService {
     });
 
     return this.find(userId);
+  }
+
+  public static async getProfile(id: string = '') {
+    return User.query().findById(id)
+      .withGraphFetched(`[avatar, skills, works(orderByCreatedAt, onlyPublished).image, requestedProjects(onlyCompleted, orderByCompletedAt) as projects.${Project.relationsExpr}]`);
   }
 
   public static async find(id: string = '') {

@@ -27,6 +27,10 @@ class ProjectPolicy {
   public static canRemoveUserRequest(user: User, project: Project) {
     return user.id === project.user_id;
   }
+
+  public static canMoveToDone(user: User, project: Project) {
+    return user.id === project.user_id;
+  }
 }
 
 export default ProjectPolicy;

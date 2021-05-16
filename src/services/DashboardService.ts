@@ -1,21 +1,19 @@
 import ProjectUser from '../models/ProjectUser';
 import Project from '../models/Project';
+import UserService from './UserService';
 
 class DashboardService {
   public static async getStudentDashboard(userId: string) {
-    const requests = await ProjectUser.query().where({ user_id: userId })
-      .withGraphFetched(`project(onlyFromBacklog).${Project.relationsExpr}`);
+    const user = await UserService.find(userId);
+    const requestedProjects = await user.$relatedQuery<Project>('requestedProjects')
+      .modify('onlyFromBacklog')
+      .where('is_accepted', false)
+      .withGraphFetched(Project.relationsExpr);
 
-    const requestedProjects = requests
-      // @ts-ignore
-      .filter(({ project, is_accepted }) => project && !is_accepted)
-      // @ts-ignore
-      .map(({ project }) => project);
-    const acceptedProjects = requests
-      // @ts-ignore
-      .filter(({ project, is_accepted }) => project && is_accepted)
-      // @ts-ignore
-      .map(({ project }) => project);
+    const acceptedProjects = await user.$relatedQuery<Project>('requestedProjects')
+      .modify('onlyFromBacklog')
+      .where('is_accepted', true)
+      .withGraphFetched(Project.relationsExpr);
 
     return { requestedProjects, acceptedProjects };
   }

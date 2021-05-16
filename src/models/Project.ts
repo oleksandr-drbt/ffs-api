@@ -1,22 +1,9 @@
+import path from 'path';
 import BaseModel from './BaseModel';
 import { Model, QueryBuilder } from 'objection';
 import User from './User';
-import Skill, { ISkill } from './Skill';
+import Skill from './Skill';
 import File from './File';
-
-export interface IProject {
-  id?: string;
-  title: string;
-  description?: string;
-  type?: string;
-  students_count?: string;
-  duration?: string;
-  status?: string;
-  userId?: string;
-  skills?: ISkill[];
-  files?: string[];
-  users?: string[];
-}
 
 class Project extends BaseModel {
   id?: string;
@@ -59,8 +46,12 @@ class Project extends BaseModel {
         builder.orderBy('created_at', 'desc');
       },
 
-      onlyTaken(builder: QueryBuilder<any>) {
-        builder.whereIn('status', ['inprogress', 'done']);
+      orderByCompletedAt(builder: QueryBuilder<any>) {
+        builder.orderBy('completed_at', 'desc');
+      },
+
+      onlyCompleted(builder: QueryBuilder<any>) {
+        builder.where('status', 'done');
       },
 
       onlyFromBacklog(builder: QueryBuilder<any>) {
@@ -72,7 +63,7 @@ class Project extends BaseModel {
   static relationMappings = {
     user: {
       relation: Model.BelongsToOneRelation,
-      modelClass: User,
+      modelClass: path.join(__dirname, 'User'),
       join: {
         from: 'projects.user_id',
         to: 'users.id',
@@ -100,13 +91,13 @@ class Project extends BaseModel {
     },
     participants: {
       relation: Model.ManyToManyRelation,
-      modelClass: User,
+      modelClass: path.join(__dirname, 'User'),
       join: {
         from: 'projects.id',
         through: {
           from: 'projects_users.project_id',
           to: 'projects_users.user_id',
-          extra: ['is_accepted', 'review'],
+          extra: ['is_accepted', 'review', 'completed_at'],
         },
         to: 'users.id',
       },

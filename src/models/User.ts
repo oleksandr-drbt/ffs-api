@@ -1,24 +1,11 @@
+import path from 'path';
 import BaseModel from './BaseModel';
 import { Model } from 'objection';
-import Skill, { ISkill } from './Skill';
+import Skill from './Skill';
 import Image, { IImage } from './Image';
-import Work, { IWork } from './Work';
+import Work from './Work';
 import ImageService from '../services/ImageService';
-import ProjectUser from './ProjectUser';
-
-export interface IUser {
-  id?: string;
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  role?: string;
-  phone?: string;
-  position?: string;
-  description?: string;
-  avatarUrl?: string;
-  skills?: ISkill[];
-  works?: IWork[];
-}
+import Project from './Project';
 
 class User extends BaseModel {
   id?: string;
@@ -97,6 +84,19 @@ class User extends BaseModel {
       join: {
         from: 'users.id',
         to: 'works.user_id',
+      },
+    },
+    requestedProjects: {
+      relation: Model.ManyToManyRelation,
+      modelClass: path.join(__dirname, 'Project'),
+      join: {
+        from: 'users.id',
+        through: {
+          from: 'projects_users.user_id',
+          to: 'projects_users.project_id',
+          extra: ['is_accepted', 'review', 'completed_at'],
+        },
+        to: 'projects.id',
       },
     },
   };
