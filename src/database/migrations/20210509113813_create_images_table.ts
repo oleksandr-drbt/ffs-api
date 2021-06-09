@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<any> {
     table.uuid('id').primary().notNullable();
     table.string('name', 255).notNullable();
     table.string('path', 255).notNullable();
-    table.string('entity_id', 100).notNullable();
+    table.uuid('entity_id').notNullable();
     table.timestamps(true, true);
   });
 }

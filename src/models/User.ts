@@ -36,7 +36,7 @@ class User extends BaseModel {
       role: { type: 'string', enum: ['student', 'teacher'], default: 'student' },
       phone: { type: ['string', 'null'], maxLength: 20 },
       position: { type: ['string', 'null'], maxLength: 100 },
-      description: { type: ['string', 'null'], maxLength: 255 },
+      description: { type: ['string', 'null'], maxLength: 2000 },
       password: { type: 'string', minLength: 1, maxLength: 255 },
       created_at: { type: 'datetime' },
       updated_at: { type: 'datetime' },

@@ -6,8 +6,11 @@ export async function up(knex: Knex): Promise<any> {
     table.string('name', 255).notNullable();
     table.string('original_name', 255).notNullable();
     table.string('path', 255).notNullable();
-    table.string('project_id', 100).notNullable();
+    table.uuid('project_id').notNullable();
     table.timestamps(true, true);
+
+    table.foreign('project_id').references('id').inTable('projects')
+      .onDelete('cascade').onUpdate('cascade');
   });
 }
 

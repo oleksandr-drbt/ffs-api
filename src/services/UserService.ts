@@ -1,7 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import User from '../models/User';
 import Image, { IImage } from '../models/Image';
-import Skill from '../models/Skill';
 import PasswordService from './PasswordService';
 import SkillService from './SkillService';
 import Project from '../models/Project';
@@ -71,7 +70,6 @@ class UserService {
     if (user.avatar) {
       await user.$relatedQuery<Image>('avatar').delete();
     }
-    await user.$relatedQuery<Skill>('skills').unrelate();
 
     return user.$query().delete();
   }
